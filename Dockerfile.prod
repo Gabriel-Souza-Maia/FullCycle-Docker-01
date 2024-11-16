@@ -1,0 +1,13 @@
+FROM golang:latest AS compiler
+
+WORKDIR /go/src/hello
+
+COPY hello/hello.go .
+
+RUN go build -o hello -ldflags="-s -w" hello.go
+
+FROM scratch
+
+COPY --from=compiler /go/src/hello/hello .
+
+ENTRYPOINT [ "./hello" ]
